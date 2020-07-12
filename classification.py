@@ -15,7 +15,6 @@ class ClassificationModelEvaluator(ModelEvaluator):
     def __init__(self):
         super().__init__()
         self.metrics_class = BinaryClassificationMetrics
-        self.whole_metrics = {}
 
 
     def append_eval_row(self, model_type, dataset, metrics):
@@ -52,7 +51,7 @@ if __name__ == "__main__":
                                  subsamplingRate=0.7)
     rfc_model = rfc.fit(adult_class)
 
-    features = evaluator.extract_feature_imp(rfc_model.featureImportances, adult_class, 'features')
+    features = evaluator.extract_feature_importance(rfc_model.featureImportances, adult_class, 'features')
 
     # Hyperparameter tuning
 

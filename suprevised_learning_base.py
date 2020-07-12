@@ -21,8 +21,8 @@ for var in environment:
     os.environ[var] = sys.executable
 
 conf = SparkConf()
-conf.set('spark.jars', "/home/share/postgresql-42.2.12.jar")
-conf.set('spark.driver.extraClassPath', "/home/share/postgresql-42.2.12.jar")
+# conf.set('spark.jars', "/home/share/postgresql-42.2.12.jar")
+# conf.set('spark.driver.extraClassPath', "/home/share/postgresql-42.2.12.jar")
 session = SparkSession.builder.config(conf=conf).getOrCreate()
 session.sparkContext.setLogLevel("ERROR")
 
@@ -168,7 +168,7 @@ class ModelEvaluator(object):
 
 
     @staticmethod
-    def extract_feature_imp(feature_imp, dataset, features_col='features'):
+    def extract_feature_importance(feature_imp, dataset, features_col='features'):
         list_extract = []
         for i in dataset.schema[features_col].metadata["ml_attr"]["attrs"]:
             list_extract = list_extract + dataset.schema[features_col].metadata["ml_attr"]["attrs"][i]
