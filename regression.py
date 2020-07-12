@@ -10,19 +10,18 @@ class RegressionModelEvaluator(ModelEvaluator):
         self.metrics_class = RegressionMetrics
 
 
-    @staticmethod
-    def append_eval_row(model_type, dataset, metrics, whole_metrics):
-        if not whole_metrics:
-            whole_metrics = {"model": [], "dataset": [], "Explained_Var": [],
-                             "Mean_Abs_Er": [], "Mean_Square_Er": [], "RMSE": [], "r2": []}
+    def append_eval_row(self, model_type, dataset, metrics):
+        if not self.whole_metrics:
+            self.whole_metrics = {"model": [], "dataset": [], "Explained_Var": [],
+                                  "Mean_Abs_Er": [], "Mean_Square_Er": [], "RMSE": [], "r2": []}
 
-        whole_metrics['model'].append(model_type)
-        whole_metrics['dataset'].append(dataset)
-        whole_metrics['Explained_Var'].append(metrics.explainedVariance)
-        whole_metrics['Mean_Abs_Er'].append(metrics.meanAbsoluteError)
-        whole_metrics['Mean_Square_Er'].append(metrics.meanSquaredError)
-        whole_metrics['RMSE'].append(metrics.rootMeanSquaredError)
-        whole_metrics['r2'].append(metrics.r2)
+        self.whole_metrics['model'].append(model_type)
+        self.whole_metrics['dataset'].append(dataset)
+        self.whole_metrics['Explained_Var'].append(metrics.explainedVariance)
+        self.whole_metrics['Mean_Abs_Er'].append(metrics.meanAbsoluteError)
+        self.whole_metrics['Mean_Square_Er'].append(metrics.meanSquaredError)
+        self.whole_metrics['RMSE'].append(metrics.rootMeanSquaredError)
+        self.whole_metrics['r2'].append(metrics.r2)
 
 
 if __name__ == "__main__":
