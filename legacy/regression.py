@@ -1,7 +1,7 @@
 from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.mllib.evaluation import RegressionMetrics
 
-from suprevised_learning_base import DataPreprocessor, session, ModelTuner, ModelEvaluator
+from legacy.suprevised_learning_base import DataPreprocessor, session, ModelTuner, ModelEvaluator
 
 
 class RegressionModelEvaluator(ModelEvaluator):

@@ -2,8 +2,8 @@ from pyspark.ml.classification import LogisticRegression, RandomForestClassifier
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
 from pyspark.mllib.evaluation import BinaryClassificationMetrics
 
-from suprevised_learning_base import DataPreprocessor, session, ModelEvaluator
-from suprevised_learning_base import ModelTuner
+from legacy.suprevised_learning_base import DataPreprocessor, session, ModelEvaluator
+from legacy.suprevised_learning_base import ModelTuner
 
 
 class ClassificationPreprocessor(DataPreprocessor):
