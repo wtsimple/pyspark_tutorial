@@ -10,3 +10,4 @@
 - [ ] prepare data for regression
 - [ ] fit regression model(s)
 - [ ] obtain the regression metrics and compare the models
+- [ ]  improve README.md
