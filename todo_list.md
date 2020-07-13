@@ -1,0 +1,12 @@
+- [ ] load data from the files
+- [ ] prepare data for classification models
+    - [ ] string encode the factor columns
+    - [ ] one-hot encode the numerically encoded factor columns
+    - [ ] build dataframe with features vector and labels column
+- [ ] fit a simple classification model
+- [ ] obtain evaluation metrics for the model
+- [ ] fit several classification models
+- [ ] compare all classification models
+- [ ] prepare data for regression
+- [ ] fit regression model(s)
+- [ ] obtain the regression metrics and compare the models
