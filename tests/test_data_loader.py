@@ -19,14 +19,16 @@ COLUMN_NAMES = ["age",
                 "native_country",
                 "income"]
 
+TEST_DATA_PATH = "data/data_example_for_tests.csv"
+
 
 @pytest.fixture
 def data_loader():
     return DataLoader()
 
 
-def test_data_loader_loads_data(data_loader):
-    df = data_loader.load_relative(path="data/data_example_for_tests.csv", columns=COLUMN_NAMES)
+def test_data_loader_loads_data_frame(data_loader):
+    df = data_loader.load_relative(path=TEST_DATA_PATH, columns=COLUMN_NAMES)
     assert isinstance(df, DataFrame)
     assert df.columns == COLUMN_NAMES
     # Check some values from the first row
