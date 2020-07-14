@@ -1,5 +1,5 @@
 - [x] start and configure Spark
-- [ ] load data from the files
+- [ ] load_relative data from the files
 - [ ] prepare data for classification models
     - [ ] string encode the factor columns
     - [ ] one-hot encode the numerically encoded factor columns
