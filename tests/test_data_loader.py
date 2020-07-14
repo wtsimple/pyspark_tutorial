@@ -2,24 +2,7 @@ import pytest
 from pyspark.sql import DataFrame
 
 from data_loader import DataLoader
-
-COLUMN_NAMES = ["age",
-                "workclass",
-                "fnlwgt",
-                "education",
-                "education_num",
-                "marital_status",
-                "occupation",
-                "relationship",
-                "race",
-                "sex",
-                "capital_gain",
-                "capital_loss",
-                "hours_per_week",
-                "native_country",
-                "income"]
-
-TEST_DATA_PATH = "data/data_example_for_tests.csv"
+from settings import TEST_DATA_PATH, COLUMN_NAMES
 
 
 @pytest.fixture

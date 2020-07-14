@@ -1,6 +1,8 @@
 - [x] start and configure Spark
 - [x] load data from the files
 - [ ] prepare data for classification models
+    - [ ] explore the data without knowing distributions
+    - [ ] standardize and clean the data
     - [ ] string encode the factor columns
     - [ ] one-hot encode the numerically encoded factor columns
     - [ ] build dataframe with features vector and labels column
@@ -11,4 +13,4 @@
 - [ ] prepare data for regression
 - [ ] fit regression model(s)
 - [ ] obtain the regression metrics and compare the models
-- [ ]  improve README.md
+- [ ] improve README.md
