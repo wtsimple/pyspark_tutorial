@@ -9,7 +9,7 @@ from pyspark.ml import Pipeline
 from pyspark.ml.classification import LogisticRegression, RandomForestClassifier, GBTClassifier, \
     MultilayerPerceptronClassifier, LinearSVC, NaiveBayes
 from pyspark.ml.evaluation import BinaryClassificationEvaluator
-from pyspark.ml.feature import VectorAssembler, StringIndexer, OneHotEncoderEstimator
+from pyspark.ml.feature import VectorAssembler, StringIndexer, OneHotEncoder
 from pyspark.ml.regression import LinearRegression, GeneralizedLinearRegression, DecisionTreeRegressor, \
     RandomForestRegressor, GBTRegressor
 from pyspark.ml.tuning import ParamGridBuilder, CrossValidator
@@ -38,7 +38,7 @@ class DataPreprocessor(object):
         self.indexed_factors = []
         self.target_col = ''
         self.pipeline = Pipeline()
-        self.encoder = OneHotEncoderEstimator()
+        self.encoder = OneHotEncoder()
 
 
     @staticmethod
@@ -76,7 +76,7 @@ class DataPreprocessor(object):
         self.pipeline = self.pipeline.fit(fitted_df)
         string_encoded = self.pipeline.transform(fitted_df)
 
-        self.encoder = OneHotEncoderEstimator(inputCols=self.indexed_factors, outputCols=self.indexed_vectors)
+        self.encoder = OneHotEncoder(inputCols=self.indexed_factors, outputCols=self.indexed_vectors)
         self.encoder = self.encoder.fit(string_encoded)
 
         return self

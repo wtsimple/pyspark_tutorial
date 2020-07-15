@@ -38,7 +38,7 @@ if __name__ == "__main__":
     adult_test = preprocessor.clean_string_columns_data(adult_test)
 
     # Exploration
-    # preprocessor.explore_factors(train_df=adult_df, test_df=adult_test)
+    preprocessor.explore_factors(train_df=adult_df, test_df=adult_test)
 
     adult_class = preprocessor.fit(adult_df, target_col='income').transform(adult_df)
     adult_test_class = preprocessor.transform(adult_test)
