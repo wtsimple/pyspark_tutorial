@@ -1,16 +1,22 @@
+# Adult data set configs
+ADULT_COLUMN_NAMES = ["age",
+                      "workclass",
+                      "fnlwgt",
+                      "education",
+                      "education_num",
+                      "marital_status",
+                      "occupation",
+                      "relationship",
+                      "race",
+                      "sex",
+                      "capital_gain",
+                      "capital_loss",
+                      "hours_per_week",
+                      "native_country",
+                      "income"]
+
+ADULT_TRAIN_DATA = "data/adult.data"
+ADULT_TEST_DATA = "data/adult.test"
+
+# Test configurations
 TEST_DATA_PATH = "data/data_example_for_tests.csv"
-COLUMN_NAMES = ["age",
-                "workclass",
-                "fnlwgt",
-                "education",
-                "education_num",
-                "marital_status",
-                "occupation",
-                "relationship",
-                "race",
-                "sex",
-                "capital_gain",
-                "capital_loss",
-                "hours_per_week",
-                "native_country",
-                "income"]
