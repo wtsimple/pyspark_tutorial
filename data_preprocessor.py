@@ -24,6 +24,16 @@ class DataPreprocessor(object):
         return factor_exploration
 
 
+    def explore_numeric_columns(self):
+        exploration = {}
+        for col in self.get_numeric_columns():
+            train_summary = self.train_df.select(col).describe().withColumnRenamed(col, 'train')
+            test_summary = self.test_df.select(col).describe().withColumnRenamed(col, 'test')
+            pandas_df = train_summary.join(test_summary, ['summary'], how='outer').toPandas()
+            exploration[col] = pandas_df.set_index('summary')
+        return exploration
+
+
     def get_factors(self):
         return self._get_cols_by_types(types=['string'])
 

@@ -39,18 +39,40 @@ def test_preprocessor_get_numeric_columns(preprocessor):
 
 
 def test_data_preprocessor_explore_factors():
-    example_cols = ["column1"]
     example_train = [["value1"], ["value2"], ["value1"], ["value3"]]
     example_test = [["value1"], ["value2"], ["value1"]]
-    train_df = SparkLauncher().session.createDataFrame(example_train, example_cols)
-    test_df = SparkLauncher().session.createDataFrame(example_test, example_cols)
-    prep = DataPreprocessor(train_df=train_df, test_df=test_df)
-    factor_exploration = prep.explore_factors()
+    exp_df = _create_exploration_df(example_test, example_train, is_numeric=False)
 
-    # Factor explore should return a dictionary of pandas dataframes with the data ready to compare factors
-    assert len(factor_exploration) == 1
-    exp_df = factor_exploration["column1"]
     assert isinstance(exp_df, pandas.DataFrame)
-    assert exp_df.shape == (3, 3)
+    assert exp_df.shape == (3, 2)
     assert exp_df.in_train['value1'] == 1
     assert exp_df.in_test['value3'] == 0
+
+
+def test_exploring_numeric_columns():
+    example_train = [[99.], [25.], [-17.3], [81.47]]
+    example_test = [[33.], [45.14], [1.]]
+    exp_df = _create_exploration_df(example_test, example_train, is_numeric=True)
+    assert exp_df.train['count'] == pytest.approx(4)
+    assert exp_df.test['count'] == pytest.approx(3)
+    assert exp_df.train['max'] == pytest.approx(99.0)
+    assert exp_df.test['max'] == pytest.approx(45.14)
+
+
+def _create_exploration_df(example_test, example_train, is_numeric=False):
+    example_cols = ["column1"]
+    test_df, train_df = _create_testing_dataframes(example_cols, example_test, example_train)
+    prep = DataPreprocessor(train_df=train_df, test_df=test_df)
+    if is_numeric:
+        factor_exploration = prep.explore_numeric_columns()
+    else:
+        factor_exploration = prep.explore_factors()
+
+    assert len(factor_exploration) == 1
+    return factor_exploration["column1"]
+
+
+def _create_testing_dataframes(example_cols, data_test, data_train):
+    train_df = SparkLauncher().session.createDataFrame(data_train, example_cols)
+    test_df = SparkLauncher().session.createDataFrame(data_test, example_cols)
+    return test_df, train_df
