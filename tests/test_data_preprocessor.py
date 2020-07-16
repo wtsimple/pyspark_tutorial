@@ -40,10 +40,17 @@ def test_preprocessor_get_numeric_columns(preprocessor):
 
 def test_data_preprocessor_explore_factors():
     example_cols = ["column1"]
-    example_data = [["value1"], ["value2"]]
-    df = SparkLauncher().session.createDataFrame(example_data, example_cols)
-    prep = DataPreprocessor(train_df=df, test_df=df)
+    example_train = [["value1"], ["value2"], ["value1"], ["value3"]]
+    example_test = [["value1"], ["value2"], ["value1"]]
+    train_df = SparkLauncher().session.createDataFrame(example_train, example_cols)
+    test_df = SparkLauncher().session.createDataFrame(example_test, example_cols)
+    prep = DataPreprocessor(train_df=train_df, test_df=test_df)
     factor_exploration = prep.explore_factors()
+
     # Factor explore should return a dictionary of pandas dataframes with the data ready to compare factors
     assert len(factor_exploration) == 1
-    assert isinstance(factor_exploration["column1"], pandas.DataFrame)
+    exp_df = factor_exploration["column1"]
+    assert isinstance(exp_df, pandas.DataFrame)
+    assert exp_df.shape == (3, 3)
+    assert exp_df.in_train['value1'] == 1
+    assert exp_df.in_test['value3'] == 0
