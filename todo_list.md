@@ -2,6 +2,8 @@
 - [x] load data from the files
 - [ ] prepare data for classification models
     - [ ] explore the data without knowing distributions
+        - [x] explore factors
+        - [ ] explore numeric cols
     - [ ] standardize and clean the data
     - [ ] string encode the factor columns
     - [ ] one-hot encode the numerically encoded factor columns
