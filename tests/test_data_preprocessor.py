@@ -19,23 +19,23 @@ def test_preprocessor_get_factors(preprocessor):
     # Example 1
     factors_example = ['workclass', 'education', 'marital_status', 'occupation', 'relationship', 'race', 'sex',
                        'native_country', 'income']
-    assert preprocessor.get_factors() == factors_example
+    assert preprocessor.factors == factors_example
     # Example 2 (rename last column)
     renamed = preprocessor.train_df.withColumnRenamed('income', 'income2')
     preprocessor.train_df = renamed
     preprocessor.test_df = renamed
     factors_example[-1] = "income2"
-    assert preprocessor.get_factors() == factors_example
+    assert preprocessor.factors == factors_example
 
 
 def test_preprocessor_get_numeric_columns(preprocessor):
     numeric_cols = ['age', 'fnlwgt', 'education_num', 'capital_gain', 'capital_loss', 'hours_per_week']
-    assert preprocessor.get_numeric_columns() == numeric_cols
+    assert preprocessor.numeric_columns == numeric_cols
     renamed = preprocessor.train_df.withColumnRenamed('capital_loss', 'capital_super_loss')
     preprocessor.train_df = renamed
     preprocessor.test_df = renamed
     numeric_cols[-2] = 'capital_super_loss'
-    assert preprocessor.get_numeric_columns() == numeric_cols
+    assert preprocessor.numeric_columns == numeric_cols
 
 
 def test_data_preprocessor_explore_factors():

@@ -17,7 +17,7 @@ class DataPreprocessor(object):
         containing all the columns values
         """
         factor_exploration = {}
-        for column in self.get_factors():
+        for column in self.factors:
             join_count = self._get_join_count(column)
             pandas_df = join_count.toPandas()
             pandas_df = pandas_df.set_index(column)
@@ -27,7 +27,7 @@ class DataPreprocessor(object):
 
     def explore_numeric_columns(self):
         exploration = {}
-        for col in self.get_numeric_columns():
+        for col in self.numeric_columns:
             train_summary = self.train_df.select(col).describe().withColumnRenamed(col, 'train')
             test_summary = self.test_df.select(col).describe().withColumnRenamed(col, 'test')
             pandas_df = train_summary.join(test_summary, ['summary'], how='outer').toPandas()
@@ -35,11 +35,13 @@ class DataPreprocessor(object):
         return exploration
 
 
-    def get_factors(self):
+    @property
+    def factors(self) -> List[str]:
         return self._get_cols_by_types(types=['string'])
 
 
-    def get_numeric_columns(self):
+    @property
+    def numeric_columns(self) -> List[str]:
         return self._get_cols_by_types(types=['double', 'int'])
 
 
