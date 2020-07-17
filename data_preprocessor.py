@@ -35,6 +35,14 @@ class DataPreprocessor(object):
         return exploration
 
 
+    @staticmethod
+    def print_exploration(exploration: dict):
+        for column, df in exploration.items():
+            print("COLUMN:", column, "=" * 15)
+            print(df)
+            print("=" * 50)
+
+
     @property
     def factors(self) -> List[str]:
         return self._get_cols_by_types(types=['string'])
