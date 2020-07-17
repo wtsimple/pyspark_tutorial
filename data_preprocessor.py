@@ -1,5 +1,6 @@
 from typing import List
 
+import pandas
 import pyspark.sql.functions as func
 from pyspark.sql import DataFrame
 
@@ -30,7 +31,7 @@ class DataPreprocessor(object):
             train_summary = self.train_df.select(col).describe().withColumnRenamed(col, 'train')
             test_summary = self.test_df.select(col).describe().withColumnRenamed(col, 'test')
             pandas_df = train_summary.join(test_summary, ['summary'], how='outer').toPandas()
-            exploration[col] = pandas_df.set_index('summary')
+            exploration[col] = self._make_pandas_df_numeric(pandas_df.set_index('summary'))
         return exploration
 
 
@@ -76,4 +77,11 @@ class DataPreprocessor(object):
         """
         for col in cols:
             pandas_df[col] = (pandas_df[col] > 0).astype(int)
+        return pandas_df
+
+
+    @staticmethod
+    def _make_pandas_df_numeric(pandas_df: pandas.DataFrame):
+        for col in pandas_df.columns:
+            pandas_df[col] = pandas.to_numeric(pandas_df[col])
         return pandas_df
