@@ -47,11 +47,11 @@ class DataPreprocessor(object):
 
     def strip_columns(self, *columns, to_strip=" "):
         """Strip character ouf of string columns"""
-        strip_col = func.udf(lambda x: x.strip(to_strip + " "))
+        self._assert_are_factors(columns)
+        strip_column_udf = func.udf(lambda x: x.strip(to_strip + " "))
         for column in columns:
-            assert column in self.factors, f"Column {column} is not a factor"
-            self.train_df = self.train_df.withColumn(column, strip_col(column))
-            self.test_df = self.test_df.withColumn(column, strip_col(column))
+            self.train_df = self.train_df.withColumn(column, strip_column_udf(column))
+            self.test_df = self.test_df.withColumn(column, strip_column_udf(column))
 
 
     def string_index(self, *columns, suffix="_cat"):

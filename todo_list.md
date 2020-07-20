@@ -1,6 +1,6 @@
 - [x] start and configure Spark
 - [x] load data from the files
-- [ ] prepare data for classification models
+- [x] prepare data for classification models
     - [x] explore the data without knowing distributions
         - [x] explore factors
         - [x] explore numeric cols
