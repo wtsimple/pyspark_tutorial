@@ -7,8 +7,8 @@
     - [x] standardize and clean the data
         - [x] strip dots out of income column
         - [x] strip spaces out of string columns
-    - [ ] string encode the factor columns
-    - [ ] one-hot encode the numerically encoded factor columns
+    - [x] string index the factor columns
+    - [ ] one-hot encode the indexed factor columns
     - [ ] build dataframe with features vector and labels column
 - [ ] fit a simple classification model
 - [ ] obtain evaluation metrics for the model

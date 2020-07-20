@@ -60,12 +60,23 @@ def test_exploring_numeric_columns():
 
 
 def test_stripping_dots_out_of_income_column(preprocessor):
-    preprocessor.strip_columns(".", "income")
-    preprocessor.strip_columns(" ", *preprocessor.factors)
+    preprocessor.strip_columns("income", to_strip=".")
+    preprocessor.strip_columns(*preprocessor.factors, to_strip=" ")
     rows = preprocessor.train_df.collect()
     for row in rows:
         assert "." not in row.income
         assert ' ' not in row.education
+
+
+def test_string_indexing_factor_columns(preprocessor):
+    """Factor columns are first encoded as integers in order
+    of frequency, the most popular value first"""
+
+    preprocessor.string_index("education", suffix="_cat")
+    # in example data most common education is Bachelors
+    assert preprocessor.train_df.first().education_cat == 0.0
+    # Second most popular value is HS-Grad, in third row (tied with Masters)
+    assert preprocessor.train_df.take(3)[-1].education_cat == 1.0
 
 
 def _create_exploration_df(example_test, example_train, is_numeric=False):

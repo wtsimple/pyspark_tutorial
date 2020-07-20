@@ -2,6 +2,8 @@ from typing import List
 
 import pandas
 import pyspark.sql.functions as func
+from pyspark.ml import Pipeline
+from pyspark.ml.feature import StringIndexer
 from pyspark.sql import DataFrame
 
 
@@ -43,13 +45,27 @@ class DataPreprocessor(object):
             print("=" * 50)
 
 
-    def strip_columns(self, to_strip=" ", *columns):
+    def strip_columns(self, *columns, to_strip=" "):
         """Strip character ouf of string columns"""
         strip_col = func.udf(lambda x: x.strip(to_strip + " "))
         for column in columns:
             assert column in self.factors, f"Column {column} is not a factor"
             self.train_df = self.train_df.withColumn(column, strip_col(column))
             self.test_df = self.test_df.withColumn(column, strip_col(column))
+
+
+    def string_index(self, *columns, suffix="_cat"):
+        """
+        Creates string indexed columns named as the original with appended suffix
+
+        :param columns:
+        :param suffix:
+        :return:
+        """
+        pipeline = Pipeline(stages=[StringIndexer(inputCol=factor, outputCol=factor + "_cat") for factor in columns])
+        pipeline = pipeline.fit(self.train_df)
+        self.train_df = pipeline.transform(self.train_df)
+        self.test_df = pipeline.transform(self.test_df)
 
 
     @property
