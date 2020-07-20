@@ -9,7 +9,7 @@
         - [x] strip spaces out of string columns
     - [x] string index the factor columns
     - [x] one-hot encode the indexed factor columns
-    - [ ] build dataframe with features vector and labels column
+    - [x] build dataframe with features vector and labels column
 - [ ] fit a simple classification model
 - [ ] obtain evaluation metrics for the model
 - [ ] fit several classification models

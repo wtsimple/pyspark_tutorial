@@ -88,6 +88,13 @@ def test_one_hot_encoding_indexed_columns(preprocessor):
     assert list(preprocessor.train_df.take(3)[-1].education_cat_vec) == [0, 1, 0, 0]
 
 
+def test_assemble_vector_features(preprocessor):
+    """The vector assembler joins a list of numeric columns into a vector that
+    will occupy another column"""
+    preprocessor.assemble_features("age", "hours_per_week", out_name='features')
+    assert list(preprocessor.train_df.first().features) == [39, 40]
+
+
 def _create_exploration_df(example_test, example_train, is_numeric=False):
     example_cols = ["column1"]
     test_df, train_df = _create_testing_dataframes(example_cols, example_test, example_train)

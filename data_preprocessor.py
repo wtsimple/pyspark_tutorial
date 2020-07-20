@@ -3,7 +3,7 @@ from typing import List
 import pandas
 import pyspark.sql.functions as func
 from pyspark.ml import Pipeline
-from pyspark.ml.feature import StringIndexer, OneHotEncoder
+from pyspark.ml.feature import StringIndexer, OneHotEncoder, VectorAssembler
 from pyspark.sql import DataFrame
 
 
@@ -78,6 +78,11 @@ class DataPreprocessor(object):
         self._fit_and_transform(encoder)
 
 
+    def assemble_features(self, *columns, out_name='features'):
+        v_assembler = VectorAssembler(inputCols=columns, outputCol=out_name)
+        self._fit_and_transform(v_assembler)
+
+
     @property
     def factors(self) -> List[str]:
         return self._get_cols_by_types(types=['string'])
@@ -93,7 +98,8 @@ class DataPreprocessor(object):
 
 
     def _fit_and_transform(self, model):
-        model = model.fit(self.train_df)
+        if hasattr(model, "fit"):
+            model = model.fit(self.train_df)
         self.train_df = model.transform(self.train_df)
         self.test_df = model.transform(self.test_df)
         return model
