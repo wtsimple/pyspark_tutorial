@@ -43,6 +43,15 @@ class DataPreprocessor(object):
             print("=" * 50)
 
 
+    def strip_columns(self, to_strip=" ", *columns):
+        """Strip character ouf of string columns"""
+        strip_col = func.udf(lambda x: x.strip(to_strip + " "))
+        for column in columns:
+            assert column in self.factors, f"Column {column} is not a factor"
+            self.train_df = self.train_df.withColumn(column, strip_col(column))
+            self.test_df = self.test_df.withColumn(column, strip_col(column))
+
+
     @property
     def factors(self) -> List[str]:
         return self._get_cols_by_types(types=['string'])

@@ -4,7 +4,9 @@
     - [x] explore the data without knowing distributions
         - [x] explore factors
         - [x] explore numeric cols
-    - [ ] standardize and clean the data
+    - [x] standardize and clean the data
+        - [x] strip dots out of income column
+        - [x] strip spaces out of string columns
     - [ ] string encode the factor columns
     - [ ] one-hot encode the numerically encoded factor columns
     - [ ] build dataframe with features vector and labels column

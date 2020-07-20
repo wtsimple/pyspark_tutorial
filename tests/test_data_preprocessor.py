@@ -59,6 +59,15 @@ def test_exploring_numeric_columns():
     assert exp_df.test['max'] == pytest.approx(45.14)
 
 
+def test_stripping_dots_out_of_income_column(preprocessor):
+    preprocessor.strip_columns(".", "income")
+    preprocessor.strip_columns(" ", *preprocessor.factors)
+    rows = preprocessor.train_df.collect()
+    for row in rows:
+        assert "." not in row.income
+        assert ' ' not in row.education
+
+
 def _create_exploration_df(example_test, example_train, is_numeric=False):
     example_cols = ["column1"]
     test_df, train_df = _create_testing_dataframes(example_cols, example_test, example_train)
