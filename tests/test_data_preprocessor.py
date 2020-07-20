@@ -69,7 +69,7 @@ def test_stripping_dots_out_of_income_column(preprocessor):
 
 
 def test_string_indexing_factor_columns(preprocessor):
-    """Factor columns are first encoded as integers in order
+    """Factor columns are first encoded as integers (casted as float), starting from zero in order
     of frequency, the most popular value first"""
 
     preprocessor.string_index("education", suffix="_cat")
@@ -77,6 +77,15 @@ def test_string_indexing_factor_columns(preprocessor):
     assert preprocessor.train_df.first().education_cat == 0.0
     # Second most popular value is HS-Grad, in third row (tied with Masters)
     assert preprocessor.train_df.take(3)[-1].education_cat == 1.0
+
+
+def test_one_hot_encoding_indexed_columns(preprocessor):
+    """One hot encoding turns each indexed string into a vector with 0
+    in all places but 1 in the one corresponding to the index value"""
+    preprocessor.string_index("education", suffix="_cat")
+    preprocessor.one_hot_encode("education_cat", suffix="_vec")
+    assert list(preprocessor.train_df.first().education_cat_vec) == [1, 0, 0, 0]
+    assert list(preprocessor.train_df.take(3)[-1].education_cat_vec) == [0, 1, 0, 0]
 
 
 def _create_exploration_df(example_test, example_train, is_numeric=False):

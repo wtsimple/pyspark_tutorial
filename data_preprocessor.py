@@ -3,7 +3,7 @@ from typing import List
 import pandas
 import pyspark.sql.functions as func
 from pyspark.ml import Pipeline
-from pyspark.ml.feature import StringIndexer
+from pyspark.ml.feature import StringIndexer, OneHotEncoder
 from pyspark.sql import DataFrame
 
 
@@ -62,10 +62,20 @@ class DataPreprocessor(object):
         :param suffix:
         :return:
         """
+        self._assert_are_factors(columns)
         pipeline = Pipeline(stages=[StringIndexer(inputCol=factor, outputCol=factor + "_cat") for factor in columns])
-        pipeline = pipeline.fit(self.train_df)
-        self.train_df = pipeline.transform(self.train_df)
-        self.test_df = pipeline.transform(self.test_df)
+        self._fit_and_transform(pipeline)
+
+
+    def one_hot_encode(self, *columns, suffix="_vec"):
+        """
+        Creates vectors of one-hot encoded columns from string indexed ones
+        :param columns:
+        :param suffix: it's appended to the output column
+        :return:
+        """
+        encoder = OneHotEncoder(inputCols=columns, outputCols=[col + suffix for col in columns])
+        self._fit_and_transform(encoder)
 
 
     @property
@@ -76,6 +86,17 @@ class DataPreprocessor(object):
     @property
     def numeric_columns(self) -> List[str]:
         return self._get_cols_by_types(types=['double', 'int'])
+
+
+    def _assert_are_factors(self, columns):
+        assert all(col in self.factors for col in columns), f"Some column in {columns} is not a factor"
+
+
+    def _fit_and_transform(self, model):
+        model = model.fit(self.train_df)
+        self.train_df = model.transform(self.train_df)
+        self.test_df = model.transform(self.test_df)
+        return model
 
 
     def _get_join_count(self, column=''):
