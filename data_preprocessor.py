@@ -12,6 +12,8 @@ class DataPreprocessor(object):
         assert train_df.schema == test_df.schema, "Train and test dataframes must have the same schema"
         self.train_df = train_df
         self.test_df = test_df
+        self.train_encoded_df = None
+        self.test_encoded_df = None
 
 
     def explore_factors(self):
@@ -63,7 +65,7 @@ class DataPreprocessor(object):
         :return:
         """
         self._assert_are_factors(columns)
-        pipeline = Pipeline(stages=[StringIndexer(inputCol=factor, outputCol=factor + "_cat") for factor in columns])
+        pipeline = Pipeline(stages=[StringIndexer(inputCol=factor, outputCol=factor + suffix) for factor in columns])
         self._fit_and_transform(pipeline)
 
 
@@ -81,6 +83,34 @@ class DataPreprocessor(object):
     def assemble_features(self, *columns, out_name='features'):
         v_assembler = VectorAssembler(inputCols=columns, outputCol=out_name)
         self._fit_and_transform(v_assembler)
+
+
+    def prepare_to_model(self, target_col: str, to_strip=' '):
+        """Runs all cleaning and encoding steps to generate
+        dataframes ready to use in modeling"""
+        # 1. strip factor columns
+        self.strip_columns(*self.factors, to_strip=to_strip)
+        # 2. string index factor columns
+        self.string_index(*self.factors, suffix='_cat')
+        # 3. one-hot encode indexed factors, except target
+        one_hot_columns = [fac + "_cat" for fac in self.factors if fac != target_col]
+        self.one_hot_encode(*one_hot_columns, suffix='_vec')
+        # 4. assemble all together with numeric columns into features
+        to_assemble = [col for col in self.numeric_columns if col != target_col]
+        to_assemble += [col for col, data_type in self.train_df.dtypes if "_cat_vec" in col]
+        self.assemble_features(*to_assemble)
+        if target_col in self.factors:
+            target_col += "_cat"
+
+        self.train_encoded_df = self.train_df.select(target_col, 'features').withColumnRenamed(target_col, 'label')
+        self.test_encoded_df = self.test_df.select(target_col, 'features').withColumnRenamed(target_col, 'label')
+        # df = SparkLauncher().session.createDataFrame(
+        #     [
+        #         [(1., 2.), [0.]],
+        #     ],
+        #     ['features', 'labels'])
+        # self.train_encoded_df = df
+        # self.test_encoded_df = df
 
 
     @property

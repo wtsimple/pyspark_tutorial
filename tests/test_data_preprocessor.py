@@ -2,6 +2,7 @@
 making it ready for modelling"""
 import pandas
 import pytest
+from pyspark.sql import DataFrame
 
 from data_preprocessor import DataPreprocessor
 from spark_launcher import SparkLauncher
@@ -85,6 +86,18 @@ def test_assemble_vector_features(preprocessor):
     will occupy another column"""
     preprocessor.assemble_features("age", "hours_per_week", out_name='features')
     assert list(preprocessor.train_df.first().features) == [39, 40]
+
+
+def test_prepare_to_model(preprocessor):
+    """The prepare to model produces two new dataframes
+    train_encoded_df and test_encoded_df that you can
+    directly use with any model building class, like LinearRegression"""
+    preprocessor.prepare_to_model(target_col='income', to_strip=' .')
+    assert isinstance(preprocessor.train_encoded_df, DataFrame)
+    row_features = list(preprocessor.train_encoded_df.first().features)
+    assert row_features[0] == 39
+    assert row_features[1] == 77516
+    assert preprocessor.train_encoded_df.first().label == 0
 
 
 def _create_exploration_df(example_test, example_train, is_numeric=False):
