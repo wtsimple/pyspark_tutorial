@@ -88,29 +88,20 @@ class DataPreprocessor(object):
     def prepare_to_model(self, target_col: str, to_strip=' '):
         """Runs all cleaning and encoding steps to generate
         dataframes ready to use in modeling"""
-        # 1. strip factor columns
         self.strip_columns(*self.factors, to_strip=to_strip)
-        # 2. string index factor columns
         self.string_index(*self.factors, suffix='_cat')
-        # 3. one-hot encode indexed factors, except target
-        one_hot_columns = [fac + "_cat" for fac in self.factors if fac != target_col]
-        self.one_hot_encode(*one_hot_columns, suffix='_vec')
-        # 4. assemble all together with numeric columns into features
+        # one-hot encode indexed factors, except target
+        to_one_hot_encode = [fac + "_cat" for fac in self.factors if fac != target_col]
+        self.one_hot_encode(*to_one_hot_encode, suffix='_vec')
+        # assemble all together with numeric columns into features (except target if it's numeric)
         to_assemble = [col for col in self.numeric_columns if col != target_col]
         to_assemble += [col for col, data_type in self.train_df.dtypes if "_cat_vec" in col]
         self.assemble_features(*to_assemble)
         if target_col in self.factors:
             target_col += "_cat"
 
-        self.train_encoded_df = self.train_df.select(target_col, 'features').withColumnRenamed(target_col, 'label')
-        self.test_encoded_df = self.test_df.select(target_col, 'features').withColumnRenamed(target_col, 'label')
-        # df = SparkLauncher().session.createDataFrame(
-        #     [
-        #         [(1., 2.), [0.]],
-        #     ],
-        #     ['features', 'labels'])
-        # self.train_encoded_df = df
-        # self.test_encoded_df = df
+        self.train_encoded_df = self._select_to_model(self.train_df, target_col)
+        self.test_encoded_df = self._select_to_model(self.test_df, target_col)
 
 
     @property
@@ -177,3 +168,8 @@ class DataPreprocessor(object):
         for col in pandas_df.columns:
             pandas_df[col] = pandas.to_numeric(pandas_df[col])
         return pandas_df
+
+
+    @staticmethod
+    def _select_to_model(df, target_col):
+        return df.select(target_col, 'features').withColumnRenamed(target_col, 'label')

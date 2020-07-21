@@ -10,10 +10,10 @@
     - [x] string index the factor columns
     - [x] one-hot encode the indexed factor columns
     - [x] build dataframe with features vector and labels column
-- [ ] fit a simple classification model
-    - [ ] prepare the data frame by applying all transformations 
+- [x] fit a simple classification model
+    - [x] prepare the data frame by applying all transformations 
     (cleaning, encoding, etc)        
-- [ ] obtain evaluation metrics for the model
+- [ ] **obtain evaluation metrics for the model**
 - [ ] fit several classification models
 - [ ] compare all classification models
 - [ ] prepare data for regression
