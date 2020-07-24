@@ -13,7 +13,7 @@
 - [x] fit a simple classification model
     - [x] prepare the data frame by applying all transformations 
     (cleaning, encoding, etc)        
-- [ ] **obtain evaluation metrics for the model**
+- [x] obtain evaluation metrics for a single model
 - [ ] fit several classification models
 - [ ] compare all classification models
 - [ ] prepare data for regression

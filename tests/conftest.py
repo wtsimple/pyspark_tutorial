@@ -34,6 +34,6 @@ def _get_preprocessor(data_path: str):
 
 def _fit_logistic(preprocessor):
     preprocessor.prepare_to_model(target_col='income', to_strip=' .')
-    lr = LogisticRegression(maxIter=10, regParam=0.1, elasticNetParam=0.2)
+    lr = LogisticRegression(maxIter=10, regParam=0, elasticNetParam=0)
     fit_model = lr.fit(preprocessor.train_encoded_df)
     return fit_model

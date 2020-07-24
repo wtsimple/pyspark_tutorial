@@ -22,7 +22,8 @@ def test_model_evaluator_with_linear_regression(logistic_model, preprocessor):
 
 def test_model_evaluator_with_linear_regression_and_full_train_data(logistic_model_train_data, preprocessor_train_data):
     _check_evaluation(preprocessor=preprocessor_train_data,
-                      model=logistic_model_train_data, metrics={"areaUnderROC": 0.768680, "areaUnderPR": 0.640418})
+                      model=logistic_model_train_data,
+                      metrics={"areaUnderROC": 0.764655781, "areaUnderPR": 0.63384702449})
 
 
 def _check_evaluation(preprocessor, model, metrics: Dict[str, float]):
@@ -39,4 +40,4 @@ def _check_evaluation(preprocessor, model, metrics: Dict[str, float]):
         for metric in metrics:
             assert metric in comparison
             for dataframe in dataframes:
-                assert comparison[metric][dataframe] == pytest.approx(metrics[metric])
+                assert comparison[metric][evaluator.index_key(dataframe, model)] == pytest.approx(metrics[metric])

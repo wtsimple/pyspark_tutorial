@@ -14,12 +14,21 @@ class ModelEvaluator(object):
         self.metrics_class = metrics_class if metrics_class else BinaryClassificationMetrics
 
 
-    @staticmethod
-    def compare(data_frames: Dict[str, DataFrame], models: list):
-        output_value = 1.0
-        df = data_frames[list(data_frames.keys())[0]]
-        if len(df.take(20)) > 10:
-            output_value = 0.768680
+    def compare(self, data_frames: Dict[str, DataFrame], models: list):
+        # per model and per data frame calculate all the metrics
+        index = []
         metrics = ["areaUnderROC", "areaUnderPR"]
-        return pandas.DataFrame({metric: [output_value for m in metrics] for metric in metrics},
-                                index=[key for key in data_frames.keys()])
+        data = {metric: [] for metric in metrics}
+        for model in models:
+            for df_name, df in data_frames.items():
+                index.append(self.index_key(df_name, model))
+                evaluator = self.metrics_class(model.transform(df).select('prediction', 'label').rdd)
+                for metric in metrics:
+                    data[metric].append(getattr(evaluator, metric))
+
+        return pandas.DataFrame(data, index=index)
+
+
+    @staticmethod
+    def index_key(df_name, model):
+        return model.__class__.__name__ + "_" + df_name
