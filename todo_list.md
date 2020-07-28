@@ -14,8 +14,14 @@
     - [x] prepare the data frame by applying all transformations 
     (cleaning, encoding, etc)        
 - [x] obtain evaluation metrics for a single model
-- [ ] fit several classification models
-- [ ] compare all classification models
+- [ ] **fit and compare several classification models without tuning**
+    - [ ] create an object container for the models
+    - [ ] initialize the models with default hyperparameters
+    - [ ] fit and compare the results with the evaluator
+- [ ] fit and compare several classification models with tuning and crossvalidation
+    - [ ] be able to pass a list of hyperparameters values for each hyperparameter
+    - [ ] tune and obtain the best hyperparam set per model
+    - [ ] compare the tuned models with the evaluator
 - [ ] prepare data for regression
 - [ ] fit regression model(s)
 - [ ] obtain the regression metrics and compare the models
