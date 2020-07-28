@@ -15,8 +15,8 @@
     (cleaning, encoding, etc)        
 - [x] obtain evaluation metrics for a single model
 - [ ] **fit and compare several classification models without tuning**
-    - [ ] create an object container for the models
-    - [ ] initialize the models with default hyperparameters
+    - [x] create an object container for the models
+    - [x] initialize the models with default hyperparameters
     - [ ] fit and compare the results with the evaluator
 - [ ] fit and compare several classification models with tuning and crossvalidation
     - [ ] be able to pass a list of hyperparameters values for each hyperparameter
