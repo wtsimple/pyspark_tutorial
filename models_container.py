@@ -69,7 +69,7 @@ class ModelsContainer(object):
     @property
     def _all_models_dict(self):
         return {name: obj for name, obj in self.__dict__.items()
-                if self.model_path in str(obj.__class__)}
+                if self.model_path in str(obj.__class__) or isinstance(obj, Model)}
 
 
     def _get_models_of_kind(self, kind):

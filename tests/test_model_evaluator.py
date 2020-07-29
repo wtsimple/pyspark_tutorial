@@ -4,6 +4,7 @@ import pandas
 import pytest
 from pyspark.mllib.evaluation import BinaryClassificationMetrics
 
+from data_preprocessor import DataPreprocessor
 from model_evaluator import ModelEvaluator
 from models_container import ModelsContainer, ModelKinds
 
@@ -28,17 +29,30 @@ def test_model_evaluator_with_linear_regression_and_full_train_data(logistic_mod
 
 
 def test_several_classification_models_fitting(preprocessor_train_data):
-    preprocessor_train_data.prepare_to_model(target_col='income', to_strip=' .')
-    evaluator = ModelEvaluator(metrics_class=BinaryClassificationMetrics)
+    df = preprocessor_train_data.train_df.sample(0.1)
+    preprocessor = DataPreprocessor(train_df=df, test_df=df)
+    preprocessor.prepare_to_model(target_col='income', to_strip=' .')
+
     models = ModelsContainer()
-    models.fit(preprocessor_train_data.train_encoded_df, kind=ModelKinds.CLASSIFICATION)
-    evaluator.compare({"train": preprocessor_train_data.train_encoded_df}, models=models.fitted_models)
-    print('kk')
+    models.fit(preprocessor.train_encoded_df, kind=ModelKinds.CLASSIFICATION)
+    expected_results = [
+        {"model": models.logistic_class.fitted_model,
+         "metrics": {"areaUnderROC": 0.770414, "areaUnderPR": 0.646093}, },
+        {"model": models.random_forest_class.fitted_model,
+         "metrics": {"areaUnderROC": 0.674751, "areaUnderPR": 0.664931}, },
+        {"model": models.gbt_class.fitted_model,
+         "metrics": {"areaUnderROC": 0.811643, "areaUnderPR": 0.746147}, },
+        {"model": models.svm_class.fitted_model,
+         "metrics": {"areaUnderROC": 0.750627, "areaUnderPR": 0.645328}, },
+        {"model": models.naive_bayes_class.fitted_model,
+         "metrics": {"areaUnderROC": 0.615000, "areaUnderPR": 0.504709}, },
+    ]
+    for result in expected_results:
+        _check_evaluation(preprocessor=preprocessor, model=result["model"], metrics=result["metrics"])
 
 
 def _check_evaluation(preprocessor, model, metrics: Dict[str, float]):
-    metrics_class = BinaryClassificationMetrics
-    evaluator = ModelEvaluator(metrics_class=metrics_class)
+    evaluator = ModelEvaluator(metrics_class=BinaryClassificationMetrics)
     # The purpose of this parameter is to prove names can be arbitrary in the compare method
     dataframes_sets = [['train', 'test'], ['train1', 'test1']]
     for dataframes in dataframes_sets:
@@ -51,4 +65,5 @@ def _check_evaluation(preprocessor, model, metrics: Dict[str, float]):
         for metric in metrics:
             assert metric in comparison
             for dataframe in dataframes:
-                assert comparison[metric][evaluator.index_key(dataframe, model)] == pytest.approx(metrics[metric])
+                assert comparison[metric][evaluator.index_key(dataframe, model)] == pytest.approx(metrics[metric],
+                                                                                                  abs=0.035)
