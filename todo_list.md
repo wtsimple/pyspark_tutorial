@@ -18,7 +18,7 @@
     - [x] create an object container for the models
     - [x] initialize the models with default hyperparameters
     - [x] fit and compare the results with the evaluator
-- [ ] fit and compare several classification models with tuning and crossvalidation
+- [ ] **fit and compare several classification models with tuning and crossvalidation**
     - [ ] be able to pass a list of hyperparameters values for each hyperparameter
     - [ ] tune and obtain the best hyperparam set per model
     - [ ] compare the tuned models with the evaluator
