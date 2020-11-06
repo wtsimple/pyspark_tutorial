@@ -6,7 +6,7 @@ from pyspark.mllib.evaluation import BinaryClassificationMetrics
 
 from data_preprocessor import DataPreprocessor
 from model_evaluator import ModelEvaluator
-from models_container import ModelsContainer, ModelKinds
+from models_container import ModelsContainer, ModelTypes
 
 """Expected results with real data
     model           dataset   AUC_ROC  AUC_PR
@@ -34,7 +34,7 @@ def test_several_classification_models_fitting(preprocessor_train_data):
     preprocessor.prepare_to_model(target_col='income', to_strip=' .')
 
     models = ModelsContainer()
-    models.fit(preprocessor.train_encoded_df, kind=ModelKinds.CLASSIFICATION)
+    models.fit(preprocessor.train_encoded_df, kind=ModelTypes.CLASSIFICATION)
     expected_results = [
         {"model": models.logistic_class.fitted_model,
          "metrics": {"areaUnderROC": 0.770414, "areaUnderPR": 0.646093}, },

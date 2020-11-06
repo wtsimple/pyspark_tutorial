@@ -7,13 +7,13 @@ from pyspark.sql import DataFrame
 from spark_launcher import SparkLauncher
 
 
-class ModelKinds(Enum):
+class ModelTypes(Enum):
     CLASSIFICATION = 'classification'
     REGRESSION = 'regression'
 
 
 class Model(object):
-    def __init__(self, model, name='', kind=ModelKinds.CLASSIFICATION):
+    def __init__(self, model, name='', kind=ModelTypes.CLASSIFICATION):
         self.model = model
         self.name = name
         self.kind = kind
@@ -39,7 +39,7 @@ class ModelsContainer(object):
     @property
     def classification(self):
         """Returns the classification models"""
-        return self._get_models_of_kind(kind=ModelKinds.CLASSIFICATION)
+        return self._get_models_of_kind(kind=ModelTypes.CLASSIFICATION)
 
 
     def fit(self, data: DataFrame, kind="*"):
