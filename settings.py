@@ -15,8 +15,8 @@ ADULT_COLUMN_NAMES = ["age",
                       "native_country",
                       "income"]
 
-ADULT_TRAIN_DATA_PATH = "data/adult.data"
-ADULT_TEST_DATA_PATH = "data/adult.test"
+ADULT_TRAIN_DATA_PATH = "data/adult.data.csv"
+ADULT_TEST_DATA_PATH = "data/adult.test.csv"
 
 # Test configurations
 TEST_DATA_PATH = "data/data_example_for_tests.csv"
