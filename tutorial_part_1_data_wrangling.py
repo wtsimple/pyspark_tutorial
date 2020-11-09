@@ -97,8 +97,9 @@ if __name__ == "__main__":
     df2.show()
 
     print('---- Direct Column operations -------')
-    df3 = df.withColumn('derived_column',
-                        df['column1'] + df['column2'] * df['column3'])
+    df3 = df.withColumn(
+        'derived_column', df['column1'] + df['column2'] * df['column3']
+    )
     df3.show()
 
     print('--- Aggregations and quick statistics -------')
@@ -133,9 +134,12 @@ if __name__ == "__main__":
     # quick descriptive statistics
     csv_df.describe().show()
     # get average work hours per age
-    work_hours_df = csv_df.groupBy('age') \
-        .agg(funcs.avg('hours_per_week'), funcs.stddev_samp('hours_per_week')) \
-        .sort('age')
+    work_hours_df = csv_df.groupBy(
+        'age'
+    ).agg(
+        funcs.avg('hours_per_week'),
+        funcs.stddev_samp('hours_per_week')
+    ).sort('age')
     work_hours_df.show(100)
 
     print('---- The End :) -----')
